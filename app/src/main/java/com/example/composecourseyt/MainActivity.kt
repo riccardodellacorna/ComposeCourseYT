@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -44,42 +43,34 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val scaffoldState = rememberScaffoldState()
-            var textFieldState by remember {
-                mutableStateOf("")
-            }
-            val scope = rememberCoroutineScope()
+            //val scrollState = rememberScrollState()  --> se utilizzo una lista normale, la RecyclerView (LazyColumn) include gia lo ScrollState
+            LazyColumn {
 
-            Scaffold (
-                modifier = Modifier.fillMaxSize(),
-                scaffoldState = scaffoldState
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 30.dp)
-                ) {
-                    TextField(
-                        value = textFieldState,
-                        label = {
-                            Text(text = "Enter your name")
-                        },
-                        onValueChange = {
-                            textFieldState = it
-                        },
-                        singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                /*items(50){
+                    Text(
+                        text = "Item $it",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp)
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = {
-                        scope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar("Hellllooo $textFieldState")
-                        }
-                    }) {
-                        Text(text = "Click me")
-                    }
+                }*/
+
+                itemsIndexed(
+                    listOf("This", "is", "Jetpack", "Compose")
+                ){
+                        index, string ->
+                    Text(
+                        text = string,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 24.dp)
+                    )
                 }
             }
         }
