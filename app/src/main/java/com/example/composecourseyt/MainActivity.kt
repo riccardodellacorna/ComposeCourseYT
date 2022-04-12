@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -33,8 +35,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
 import com.example.composecourseyt.ui.theme.ComposeCourseYTTheme
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -43,35 +50,35 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            //val scrollState = rememberScrollState()  --> se utilizzo una lista normale, la RecyclerView (LazyColumn) include gia lo ScrollState
-            LazyColumn {
+            val constraints = ConstraintSet(){
+                val greenBox = createRefFor("greenbox")
+                val redBox = createRefFor("redbox")
+                //val guideline = createGuidelineFromTop(0.5f)
 
-                /*items(50){
-                    Text(
-                        text = "Item $it",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp)
-                    )
-                }*/
-
-                itemsIndexed(
-                    listOf("This", "is", "Jetpack", "Compose")
-                ){
-                        index, string ->
-                    Text(
-                        text = string,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 24.dp)
-                    )
+                constrain(greenBox){
+                    top.linkTo(parent.top) //top.linkTo(guideline)
+                    start.linkTo(parent.start)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
                 }
+
+                constrain(redBox){
+                    top.linkTo(parent.top)
+                    start.linkTo(greenBox.end)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(100.dp)
+                }
+                createHorizontalChain(greenBox, redBox, chainStyle = ChainStyle.Packed)
+            }
+            ConstraintLayout(constraints, modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier
+                    .background(Color.Green)
+                    .layoutId("greenbox")
+                )
+                Box(modifier = Modifier
+                    .background(Color.Red)
+                    .layoutId("redbox")
+                )
             }
         }
     }
