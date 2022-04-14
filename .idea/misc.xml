@@ -4,11 +4,22 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/compose-model-1649681088319.xml" value="0.28885135135135137" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2105" />
         <entry key="app/src/main/res/drawable/ic_bell.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_bubble.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_dotmenu.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_grid.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_headphone.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable/ic_home.xml" value="0.2105" />
         <entry key="app/src/main/res/drawable/ic_igtv.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable/ic_moon.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable/ic_music.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable/ic_play.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable/ic_profile.xml" value="0.2105" />
         <entry key="app/src/main/res/drawable/ic_reels.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.2105" />
+        <entry key="app/src/main/res/drawable/ic_videocam.xml" value="0.2105" />
       </map>
     </option>
   </component>

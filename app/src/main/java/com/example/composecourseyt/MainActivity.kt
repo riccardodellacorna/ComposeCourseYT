@@ -65,10 +65,14 @@ import kotlin.math.atan2
 import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Navigation()
+            ComposeCourseYTTheme {
+                HomeScreen()
+                //non mi visualizza bene la UI (guarda video 14 - Jetpack Compose)
+            }
         }
     }
 }
