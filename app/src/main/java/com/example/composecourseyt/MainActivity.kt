@@ -1,147 +1,97 @@
 package com.example.composecourseyt
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.composecourseyt.ui.theme.ComposeCourseYTTheme
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeCourseYTTheme {
-                val navController = rememberNavController() //utilizzato per "navigare" tra schermate differenti
-                NavHost(
-                    navController = navController,
-                    startDestination = "login"
-                ) {
-                    composable("login") {
-                        LoginScreen(navController)
-                    }
-                    composable(
-                        route = "profile/{name}/{userId}/{timestamp}",
-                        arguments = listOf(
-                            navArgument("name") {
-                                type = NavType.StringType
-                            },
-                            navArgument("userId") {
-                                type = NavType.StringType
-                            },
-                            navArgument("timestamp") {
-                                type = NavType.LongType
-                            },
-                        )
-                    ) {
-                        val name = it.arguments?.getString("name")!!
-                        val userId = it.arguments?.getString("userId")!!
-                        val timestamp = it.arguments?.getLong("timestamp")!!
+                //nella seguente val abbiamo tutte le info della finestra aperta in quel momento
+                val windowInfo = rememberWindowInfo()
 
-                        ProfileScreen(
-                            navController = navController,
-                            name = name,
-                            userId = userId,
-                            created = timestamp
-                        )
-                    }
-                    composable("post/{showOnlyPostsByUser}", arguments = listOf(
-                        navArgument("showOnlyPostsByUser") {
-                            type = NavType.BoolType
-                            defaultValue = false
+                if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        // List 1
+                        items(10) {
+                            Text(
+                                text = "Item $it",
+                                fontSize = 25.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.Cyan)
+                                    .padding(16.dp)
+                            )
                         }
-                    )) {
-                        val showOnlyPostsByUser =
-                            it.arguments?.getBoolean("showOnlyPostsByUser") ?: false
-                        PostScreen(showOnlyPostsByUser)
+                        // List 2
+                        items(10) {
+                            Text(
+                                text = "Item $it",
+                                fontSize = 25.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color.Green)
+                                    .padding(16.dp)
+                            )
+                        }
+                    }
+                } else {
+                    Row (
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        LazyColumn(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            // List 1
+                            items(10) {
+                                Text(
+                                    text = "Item $it",
+                                    fontSize = 25.sp,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(Color.Cyan)
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+                        LazyColumn(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            // List 1
+                            items(10) {
+                                Text(
+                                    text = "Item $it",
+                                    fontSize = 25.sp,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(Color.Green)
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun LoginScreen(
-    navController: NavController
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Login Screen")
-        Button(onClick = {
-            navController.navigate("profile/philipp/userid/123456789")
-        }) {
-            Text("Go to Profile Screen")
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ProfileScreen(
-    navController: NavController,
-    name: String,
-    userId: String,
-    created: Long
-) {
-    val user = remember {
-        User(
-            name = name,
-            id = userId,
-            created = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(created), ZoneId.systemDefault()
-            )
-        )
-    }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Profile Screen: $user", textAlign = TextAlign.Center)
-        Button(onClick = {
-            navController.navigate("post/true")
-        }) {
-            Text("Go to Post Screen")
-        }
-    }
-}
-
-@Composable
-fun PostScreen(
-    showOnlyPostsByUser: Boolean = false
-) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "Post Screen, $showOnlyPostsByUser")
     }
 }
