@@ -3,95 +3,94 @@ package com.example.composecourseyt
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Slider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ExperimentalMotionApi
+import androidx.constraintlayout.compose.MotionLayout
+import androidx.constraintlayout.compose.MotionScene
 import com.example.composecourseyt.ui.theme.ComposeCourseYTTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeCourseYTTheme {
-                //nella seguente val abbiamo tutte le info della finestra aperta in quel momento
-                val windowInfo = rememberWindowInfo()
-
-                if (windowInfo.screenWidthInfo is WindowInfo.WindowType.Compact){
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        // List 1
-                        items(10) {
-                            Text(
-                                text = "Item $it",
-                                fontSize = 25.sp,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color.Cyan)
-                                    .padding(16.dp)
-                            )
-                        }
-                        // List 2
-                        items(10) {
-                            Text(
-                                text = "Item $it",
-                                fontSize = 25.sp,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color.Green)
-                                    .padding(16.dp)
-                            )
-                        }
+                Column {
+                    var progress by remember {
+                        mutableStateOf(0f)
                     }
-                } else {
-                    Row (
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        LazyColumn(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            // List 1
-                            items(10) {
-                                Text(
-                                    text = "Item $it",
-                                    fontSize = 25.sp,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(Color.Cyan)
-                                        .padding(16.dp)
-                                )
-                            }
-                        }
-                        LazyColumn(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            // List 1
-                            items(10) {
-                                Text(
-                                    text = "Item $it",
-                                    fontSize = 25.sp,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(Color.Green)
-                                        .padding(16.dp)
-                                )
-                            }
-                        }
-                    }
+                    ProfileHeader(progress = progress)
+                    Spacer(modifier = Modifier.height(50.dp))
+                    Slider(
+                        value = progress,
+                        onValueChange = {
+                            progress = it
+                        },
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMotionApi::class)
+@Composable
+fun ProfileHeader(progress: Float) {
+    val context = LocalContext.current
+    val motionScene = remember {
+        context.resources
+            .openRawResource(R.raw.motion_scene)
+            .readBytes()
+            .decodeToString()
+    }
+    MotionLayout(
+        motionScene = MotionScene(content = motionScene),
+        progress = progress,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        val properties = motionProperties(id = "profile_pic")
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.DarkGray)
+                .layoutId("box")
+        )
+        Image(
+            painter = painterResource(id = R.drawable.picture),
+            contentDescription = null,
+            modifier = Modifier
+                .clip(CircleShape)
+                .border(
+                    width = 2.dp,
+                    color = properties.value.color("background"),
+                    shape = CircleShape
+                )
+                .layoutId("profile_pic")
+        )
+        Text(
+            text = "Riccardo Della Corna",
+            fontSize = 24.sp,
+            modifier = Modifier.layoutId("username"),
+            color = properties.value.color("background")
+        )
     }
 }
